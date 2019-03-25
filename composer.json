@@ -1,0 +1,7 @@
+{
+    "name": "audrey/slim0319",
+    "type": "project",
+    "require": {
+        "slim/slim": "^3.12"
+    }
+}
