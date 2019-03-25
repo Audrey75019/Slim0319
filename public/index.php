@@ -18,13 +18,16 @@ $route->setName('homepage');
 
 
 $app->group('/projet', function () {
+    // creation d'une page de détail de projets
+    //nouveauté : on ajoute une variable dans l'url avec les accolades
     $this->get("/{id:\d+}", function ( ServerRequestInterface $request, ResponseInterface $response, ?array $args
-    ) {
+    ) {// on retourne la réponse
         return $response->getBody()->write('<h1>Détail du projet</h1>');
     }) ->setName('app_project_show');
 
+    //page de création
     $this->get("/creation", function ( ServerRequestInterface $request, ResponseInterface $response, ?array $args
-    ) {
+    ) {//on retourne la réponse
         return $response->getBody()->write('<h1>Création d\'un projet</h1>');
     }) ->setName('app_project_create');
 });
