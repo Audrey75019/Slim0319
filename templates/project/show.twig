@@ -2,6 +2,19 @@
 
 {% block body %}
 
-    <h1>détail du projet vue de twig</h1>
+    <h1>{{ project["name"] }}</h1>
+
+    <p>{{ project.description | raw('html') }}</p>
+
+    <p>Création : du {{ project.startedAt }} au {{ project.finishedAt }}</p>
+
+    <h2>Les Langages Utilisés</h2>
+
+    <ul>
+        {% for language in project['languages'] %}
+            <li>{{ language }}</li>
+        {% endfor %}
+    </ul>
+
 
 {% endblock %}

@@ -7,23 +7,37 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\Twig;
 
 class ProjectController
-{   //quand on fait de l'injection de dépendance il faut toujours mettre un argument dans le constructeur et mettre le chemin
+{
+
+    /**
+     * @var Twig
+     */
+    private $twig;
+
     public function __construct(Twig $twig)
     {
         $this->twig = $twig;
     }
 
-    public function show(ServerRequestInterface $request, ResponseInterface $response, ?array $args
-    )
+    public function show(ServerRequestInterface $request, ResponseInterface $response, ?array $args)
     {
-        //return $response->getBody()->write('<h1>Détail du projet</h1>');
-        return $this->twig->render($response, 'project/show.twig');
+        $project = [
+            "id" => 100,
+            "name" => "My wonderful site",
+            "startedAt" => '2019-03-27',
+            "finishedAt" => '2019-03-27',
+            "description" => '<h2>Site avec Slim Framework</h2><p>Lorem ipsum et autre BLA BLA BLA</p>',
+            "image" => "site.png",
+            "languages" => ["html5","css3", "php7.1", "sql"]
+        ];
+
+        //return $response->getBody()->write('<h1>Projet</h1>');
+        return $this->twig->render($response, 'project/show.twig', [
+            'project' => $project
+        ]);
     }
-    public function home(ServerRequestInterface $request, ResponseInterface $response, ?array $args
-    )
-    {
-        return $this->twig->render($response, 'project/home.twig');
-    }
+
+
     public function create( ServerRequestInterface $request, ResponseInterface $response, ?array $args
     )
     {

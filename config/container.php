@@ -10,7 +10,9 @@ $container = $app->getContainer();
 
 $container['view'] = function ($container) {
     $view = new \Slim\Views\Twig(dirname(__DIR__) . '/templates', [
-        'cache' => false
+        'cache' => false,
+        'strict_variables' => true
+        // ca c'est pour voir l'erreur quand on se trompe de nom de variable
     ]);
 
     // Instantiate and add Slim specific extension
@@ -30,7 +32,7 @@ $container['view'] = function ($container) {
 $container[ProjectController::class] = function($container){
     return new ProjectController($container->get('view'));
 };
-$container[ProjectController::class] = function(ContainerInterface $container){
+$container[ContactController::class] = function(ContainerInterface $container){
     return new ContactController($container->get('view'));
 };
 
