@@ -1,6 +1,9 @@
 <?php
 
+use App\Controller\AboutController;
+use App\Controller\ContactController;
 use App\Controller\ProjectController;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
@@ -8,15 +11,20 @@ use Slim\App;
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 //création de l'application
+//debug des erreurs (a configurer manuellement depuis l'exemple de la doc application/configuration
 $config = [
-    'setting' => [
+    'settings' => [
         'displayErrorDetails' => true
-    ]//ca ca debug les erreurs et c'est a aller chercher sur le site de slim dans "application configuration"
+    ]
 ];
 
-$app = new App();
+$app = new App($config);
 
+//configuration de Twig
+// Get container
 $container = $app->getContainer();
+
+
 
 // Register component on container
 $container['view'] = function ($container) {
@@ -32,8 +40,22 @@ $container['view'] = function ($container) {
     return $view;
 };
 
+//on crée une nouvelle clé ProjectController pour dire au container comment instancier
+//ProjectController  (recuperer le Twig défini dans la function
+//construct dans ProjectController
+//il retourne une nouvelle instance de ProjectControlleur
+//on obtient twig en envoyant la clef view du conteneur
+
 $container[ProjectController::class] = function($container){
     return new ProjectController($container->get('view'));
+};
+
+$container[ContactController::class] = function(ContainerInterface $container){
+    return new ContactController($container->get('view'));
+};
+
+$container[AboutController::class] = function(ContainerInterface $container){
+    return new AboutController($container->get('view'));
 };
 
 $route = $app->get('/', function ( ServerRequestInterface $request, ResponseInterface $response, ?array $args
@@ -42,28 +64,25 @@ $route = $app->get('/', function ( ServerRequestInterface $request, ResponseInte
     return $this->view->render($response, 'home.twig');
 
 });
+
+
+
+
 $route->setName('homepage');
-
-$route = $app->get('/contact', function ( ServerRequestInterface $request, ResponseInterface $response, ?array $args
-) {
-    //return $response->getBody()->write('<h1>Hello</h1>');
-    return $this->view->render($response, 'contact.twig');
-
-});
-$route->setName('contactpage');
 
 
 $app->group('/projet', function () {
-    // creation d'une page de détail de projets
-    //nouveauté : on ajoute une variable dans l'url avec les accolades
-    $this->get("/{id:\d+}", ProjectController::class . ':show')->setName('app_project_create');
-    // on retourne la réponse
+    // création d'une page de détail des projets
+    //Nouveauté : on ajoute une variable dans l'URL avec des accolades
+    $this->get("/{id:\d+}", ProjectController::class . ':show')->setName('app_project_show');
 
+    //Page de création
     $this->get("/creation", ProjectController::class . ':create')->setName('app_project_create');
-
-    //page de création
 });
 
+$app->get('/contact', ContactController::class . ':contact')->setName('app_contact');
+
+$app->get('/about', AboutController::class . ':about')->setName('app_about');
 
 
 
