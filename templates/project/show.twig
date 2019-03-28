@@ -2,17 +2,20 @@
 
 {% block body %}
 
+    {{ dump(project) }}
+
     <h1>{{ project["name"] }}</h1>
 
     <p>{{ project.description | raw('html') }}</p>
+    <!--Ca le raw, c'est pour qu'on voit que le html et pas les balises!-->
 
-    <p>Création : du {{ project.startedAt }} au {{ project.finishedAt }}</p>
-
+    <p class="text-muted">Développé du {{ project.startedAt.format('d/m/Y') }} au {{ project.finishedAt.format('d/m/Y à H:i:s') }}</p>
+    <!-- on a rajouté format pour convertir la datetime dans un autre format-->
     <h2>Les Langages Utilisés</h2>
 
     <ul>
         {% for language in project['languages'] %}
-            <li>{{ language }}</li>
+            <li>{{ language | upper}}</li>
         {% endfor %}
     </ul>
 

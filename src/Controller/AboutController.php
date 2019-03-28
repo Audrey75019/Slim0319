@@ -15,8 +15,8 @@ class AboutController
     public function about(
         ServerRequestInterface $request,
         ResponseInterface $response,
-        ?array $args):ResponseInterface
-    {
+        ?array $args
+    ):ResponseInterface {
         return $this->twig->render($response, 'about.twig');
     }
 }
